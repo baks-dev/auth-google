@@ -1,0 +1,41 @@
+{
+  "name": "baks-dev/auth-google",
+  "description": "Модуль авторизации пользователя в Google",
+  "homepage": "https://github.com/baks-dev/auth-google",
+  "keywords": [
+    "library",
+    "symfony",
+    "auth",
+    "google",
+    "plugin",
+    "library",
+    "module",
+    "baksdev"
+  ],
+  "license": "MIT",
+  "type": "symfony-bundle",
+  "authors": [
+    {
+      "name": "Baks Development",
+      "email": "admin@baks.dev"
+    }
+  ],
+  "require": {
+    "php": ">=8.4",
+    "baks-dev/core": "^7.3"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  },
+  "autoload": {
+    "psr-4": {
+      "BaksDev\\Auth\\Google\\": ""
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "symfony/flex": true
+    }
+  }
+}
