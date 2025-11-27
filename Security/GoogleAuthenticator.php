@@ -25,6 +25,8 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Google\Security;
 
+use BaksDev\Auth\Email\Messenger\CreateAccount\CreateAccountMessage;
+use BaksDev\Auth\Email\Type\Email\AccountEmail;
 use BaksDev\Auth\Google\Api\Google\GetAccessTokenRequest;
 use BaksDev\Auth\Google\Api\Google\GetProfileInfoRequest;
 use BaksDev\Auth\Google\Messenger\NewProfileOnGoogleRegistrationMessage;
@@ -119,6 +121,13 @@ final class GoogleAuthenticator extends AbstractAuthenticator
                         $user->getId(),
                         $info->getName()
                     ));
+
+                    /** Отправляем сообщение на создание нового email-аккаунта */
+                    $this->MessageDispatch->dispatch(
+                        new CreateAccountMessage(
+                            $user->getId(),
+                            new AccountEmail($info->getEmail()))
+                    );
 
                     return $user;
                 }

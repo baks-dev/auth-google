@@ -27,7 +27,7 @@ namespace BaksDev\Auth\Google\Api\Google;
 
 final readonly class GetProfileInfoResult
 {
-    public function __construct(private string $sub, private string $name) {}
+    public function __construct(private string $sub, private string $name, private string $email) {}
 
     public function getSub(): string
     {
@@ -37,5 +37,10 @@ final readonly class GetProfileInfoResult
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }

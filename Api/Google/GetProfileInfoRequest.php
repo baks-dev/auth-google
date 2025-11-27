@@ -58,6 +58,6 @@ final readonly class GetProfileInfoRequest
 
         $response = $response->toArray();
 
-        return new GetProfileInfoResult($response['sub'], $response['name']);
+        return new GetProfileInfoResult($response['sub'], $response['name'], $response['email']);
     }
 }
