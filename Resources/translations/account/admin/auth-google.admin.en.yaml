@@ -1,0 +1,15 @@
+page:
+  index: 'Google accounts'
+  edit: 'Edit Google account'
+  delete: 'Delete Google account'
+
+breadcrumb:
+  index: 'Google accounts'
+
+success:
+  edit: 'Google account successfully edited'
+  delete: 'Google account successfully deleted'
+
+danger:
+  edit: 'Error on Google account edit'
+  delete: 'Error on Google account delete'

@@ -1,0 +1,15 @@
+ROLE_ACCOUNT_GOOGLE:
+  name: 'Google accounts'
+  desc: 'List of registered Google users'
+
+ROLE_ACCOUNT_GOOGLE_INDEX:
+  name: 'View'
+  desc: ''
+
+ROLE_ACCOUNT_GOOGLE_EDIT:
+  name: 'Edit'
+  desc: ''
+
+ROLE_ACCOUNT_GOOGLE_DELETE:
+  name: 'Delete'
+  desc: ''
