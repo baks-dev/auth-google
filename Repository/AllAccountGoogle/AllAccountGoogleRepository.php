@@ -29,11 +29,12 @@ use BaksDev\Auth\Google\Entity\AccountGoogle;
 use BaksDev\Auth\Google\Entity\Active\AccountGoogleActive;
 use BaksDev\Auth\Google\Entity\Event\AccountGoogleEvent;
 use BaksDev\Auth\Google\Entity\Modify\AccountGoogleModify;
-use BaksDev\Auth\Google\Entity\Name\AccountGoogleName;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\Paginator;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
+use BaksDev\Users\Profile\UserProfile\Entity\Event\Info\UserProfileInfo;
+use BaksDev\Users\Profile\UserProfile\Entity\Event\Personal\UserProfilePersonal;
 
 final class AllAccountGoogleRepository implements AllAccountGoogleInterface
 {
@@ -76,13 +77,22 @@ final class AllAccountGoogleRepository implements AllAccountGoogleInterface
                 'google_active.event = google_event.id'
             );
 
+        /** Получаем имя пользователя */
         $dbal
-            ->addSelect('google_name.name AS name')
             ->leftJoin(
-                'google_event',
-                AccountGoogleName::class,
-                'google_name',
-                'google_name.event = google_event.id'
+                'google',
+                UserProfileInfo::class,
+                'user_profile_info',
+                'user_profile_info.usr = google.id AND user_profile_info.active = true'
+            );
+
+        $dbal
+            ->addSelect('user_profile_personal.username AS name')
+            ->leftJoin(
+                'user_profile_info',
+                UserProfilePersonal::class,
+                'user_profile_personal',
+                'user_profile_personal.event = user_profile_info.event'
             );
 
         $dbal

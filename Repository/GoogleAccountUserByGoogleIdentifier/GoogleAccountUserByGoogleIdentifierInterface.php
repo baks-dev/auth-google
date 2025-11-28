@@ -23,21 +23,14 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Google\Repository\GoogleAccountUserBySub;
+namespace BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier;
 
-use BaksDev\Users\User\Type\Id\UserUid;
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
 
-final readonly class GoogleAccountUserBySubResult
+interface GoogleAccountUserByGoogleIdentifierInterface
 {
-    public function __construct(private string $id, private bool $active) {}
-
-    public function getId(): UserUid
-    {
-        return new UserUid($this->id);
-    }
-
-    public function isActive(): bool
-    {
-        return $this->active === true;
-    }
+    /**
+     * Метод возвращает идентификатор пользователя UserUid по идентификатору Google
+     */
+    public function findByIdentifier(AccountGoogleIdentifier $identifier): GoogleAccountUserByGoogleIdentifierResult|false;
 }

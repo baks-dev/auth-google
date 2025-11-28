@@ -26,10 +26,10 @@ declare(strict_types=1);
 namespace BaksDev\Auth\Google\UseCase\Google\Registration;
 
 use BaksDev\Auth\Google\Entity\Event\AccountGoogleEventInterface;
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
 use BaksDev\Auth\Google\UseCase\Google\Registration\Active\AccountGoogleRegistrationActiveDTO;
 use BaksDev\Auth\Google\Type\Event\AccountGoogleEventUid;
-use BaksDev\Auth\Google\UseCase\Google\Registration\Name\AccountGoogleRegistrationNameDTO;
-use BaksDev\Auth\Google\UseCase\Google\Registration\Sub\AccountGoogleRegistrationSubDTO;
+use BaksDev\Auth\Google\UseCase\Google\Registration\Invariable\AccountGoogleRegistrationInvariableDTO;
 use Symfony\Component\Validator\Constraints as Assert;
 use BaksDev\Auth\Google\Entity\Event\AccountGoogleEvent;
 
@@ -46,16 +46,12 @@ final class AccountGoogleRegistrationDTO implements AccountGoogleEventInterface
     private AccountGoogleRegistrationActiveDTO $active;
 
     #[Assert\Valid]
-    private AccountGoogleRegistrationNameDTO $name;
-
-    #[Assert\Valid]
-    private AccountGoogleRegistrationSubDTO $sub;
+    private AccountGoogleRegistrationInvariableDTO $invariable;
 
     public function __construct()
     {
         $this->active = new AccountGoogleRegistrationActiveDTO();
-        $this->name = new AccountGoogleRegistrationNameDTO();
-        $this->sub = new AccountGoogleRegistrationSubDTO();
+        $this->invariable = new AccountGoogleRegistrationInvariableDTO();
     }
 
     /**
@@ -78,14 +74,9 @@ final class AccountGoogleRegistrationDTO implements AccountGoogleEventInterface
         return $this->active;
     }
 
-    public function getName(): AccountGoogleRegistrationNameDTO
+    public function getInvariable(): AccountGoogleRegistrationInvariableDTO
     {
-        return $this->name;
-    }
-
-    public function getSub(): AccountGoogleRegistrationSubDTO
-    {
-        return $this->sub;
+        return $this->invariable;
     }
 
     public function setActive(bool $active): self
@@ -94,15 +85,9 @@ final class AccountGoogleRegistrationDTO implements AccountGoogleEventInterface
         return $this;
     }
 
-    public function setName(string $name): self
+    public function setInvariable(AccountGoogleIdentifier $identifier): self
     {
-        $this->name->setName($name);
-        return $this;
-    }
-
-    public function setSub(string $sub): self
-    {
-        $this->sub->setValue($sub);
+        $this->invariable->setIdentifier($identifier);
         return $this;
     }
 }

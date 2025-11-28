@@ -23,44 +23,54 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Google\Entity\Sub;
+namespace BaksDev\Auth\Google\Entity\Invariable;
 
 use BaksDev\Auth\Google\Entity\Event\AccountGoogleEvent;
-use BaksDev\Core\Entity\EntityEvent;
-use Doctrine\DBAL\Types\Types;
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
+use BaksDev\Core\Entity\EntityReadonly;
+use BaksDev\Users\User\Type\Id\UserUid;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'account_google_sub')]
-class AccountGoogleSub extends EntityEvent
+#[ORM\Table(name: 'account_google_invariable')]
+class AccountGoogleInvariable extends EntityReadonly
 {
+    /** Main */
+    #[Assert\NotBlank]
+    #[Assert\Uuid]
+    #[ORM\Id]
+    #[ORM\Column(type: UserUid::TYPE)]
+    private UserUid $account;
+
     /** Связь на событие */
     #[Assert\NotBlank]
+    #[Assert\Uuid]
     #[ORM\Id]
-    #[ORM\OneToOne(targetEntity: AccountGoogleEvent::class, inversedBy: 'sub')]
+    #[ORM\OneToOne(targetEntity: AccountGoogleEvent::class, inversedBy: 'invariable')]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private AccountGoogleEvent $event;
 
     /** Уникальный идентификатор пользователя в Google */
     #[Assert\NotBlank]
-    #[ORM\Column(type: Types::STRING, length: 255)]
-    private string $value;
+    #[ORM\Column(type: AccountGoogleIdentifier::TYPE, length: 255)]
+    private AccountGoogleIdentifier $identifier;
 
     public function __construct(AccountGoogleEvent $event)
     {
         $this->event = $event;
+        $this->account = $event->getAccount();
     }
 
     public function __toString(): string
     {
-        return (string) $this->event;
+        return (string) $this->account;
     }
 
     public function getDto($dto) : mixed
     {
-        if($dto instanceof AccountGoogleSubInterface)
+        if($dto instanceof AccountGoogleInvariableInterface)
         {
             return parent::getDto($dto);
         }
@@ -71,7 +81,7 @@ class AccountGoogleSub extends EntityEvent
 
     public function setEntity($dto) : mixed
     {
-        if($dto instanceof AccountGoogleSubInterface)
+        if($dto instanceof AccountGoogleInvariableInterface|| $dto instanceof self)
         {
             return parent::setEntity($dto);
         }

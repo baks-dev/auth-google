@@ -23,16 +23,16 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Google\Repository\GoogleAccountUserBySub;
+namespace BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier;
 
 use BaksDev\Auth\Google\Entity\AccountGoogle;
 use BaksDev\Auth\Google\Entity\Active\AccountGoogleActive;
 use BaksDev\Auth\Google\Entity\Event\AccountGoogleEvent;
-use BaksDev\Auth\Google\Entity\Sub\AccountGoogleSub;
+use BaksDev\Auth\Google\Entity\Invariable\AccountGoogleInvariable;
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use Doctrine\DBAL\Types\Types;
 
-final readonly class GoogleAccountUserBySubRepository implements GoogleAccountUserBySubInterface
+final readonly class GoogleAccountUserByGoogleIdentifierRepository implements GoogleAccountUserByGoogleIdentifierInterface
 {
     public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
 
@@ -40,19 +40,24 @@ final readonly class GoogleAccountUserBySubRepository implements GoogleAccountUs
     /**
      * Метод возвращает идентификатор пользователя UserUid по идентификатору Google
      */
-    public function findBySub(string $sub): GoogleAccountUserBySubResult|false
+    public function findByIdentifier(AccountGoogleIdentifier $identifier): GoogleAccountUserByGoogleIdentifierResult|false
     {
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $dbal
 
-            ->from(AccountGoogleSub::class, 'sub')
-            ->where('sub.value = :sub')
-            ->setParameter('sub', $sub, Types::STRING);
+            ->from(AccountGoogleInvariable::class, 'invariable')
+            ->where('invariable.identifier = :identifier')
+            ->setParameter('identifier', $identifier, AccountGoogleIdentifier::TYPE);
 
         $dbal
             ->select('event.account as id')
-            ->join('sub', AccountGoogleEvent::class, 'event', 'sub.event = event.id');
+            ->join(
+                'invariable',
+                AccountGoogleEvent::class,
+                'event',
+                'invariable.event = event.id'
+            );
 
         $dbal->join('event', AccountGoogle::class, 'main', 'main.event = event.id');
 
@@ -65,6 +70,6 @@ final readonly class GoogleAccountUserBySubRepository implements GoogleAccountUs
                 'active.event = event.id'
             );
 
-        return $dbal->fetchHydrate(GoogleAccountUserBySubResult::class);
+        return $dbal->fetchHydrate(GoogleAccountUserByGoogleIdentifierResult::class);
     }
 }

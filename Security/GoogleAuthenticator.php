@@ -30,8 +30,8 @@ use BaksDev\Auth\Email\Type\Email\AccountEmail;
 use BaksDev\Auth\Google\Api\Google\GetAccessTokenRequest;
 use BaksDev\Auth\Google\Api\Google\GetProfileInfoRequest;
 use BaksDev\Auth\Google\Messenger\NewProfileOnGoogleRegistrationMessage;
-use BaksDev\Auth\Google\Repository\GoogleAccountUserBySub\GoogleAccountUserBySubInterface;
-use BaksDev\Auth\Google\Repository\GoogleAccountUserBySub\GoogleAccountUserBySubResult;
+use BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier\GoogleAccountUserByGoogleIdentifierInterface;
+use BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier\GoogleAccountUserByGoogleIdentifierResult;
 use BaksDev\Auth\Google\UseCase\Google\Registration\AccountGoogleRegistrationDTO;
 use BaksDev\Auth\Google\UseCase\Google\Registration\AccountGoogleRegistrationHandler;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
@@ -58,7 +58,7 @@ final class GoogleAuthenticator extends AbstractAuthenticator
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly GetAccessTokenRequest $GetAccessTokenRequest,
         private readonly GetProfileInfoRequest $GetProfileIdRequest,
-        private readonly GoogleAccountUserBySubInterface $GoogleAccountUserBySubRepository,
+        private readonly GoogleAccountUserByGoogleIdentifierInterface $GoogleAccountUserBySubRepository,
         private readonly GetUserByIdInterface $userById,
         private readonly AccountGoogleRegistrationHandler $AccountGoogleRegistrationHandler,
         private readonly MessageDispatchInterface $MessageDispatch,
@@ -99,16 +99,15 @@ final class GoogleAuthenticator extends AbstractAuthenticator
         /** Получаем паспорт */
         return new SelfValidatingPassport(
             new UserBadge($request->get('code'), function() use ($info) {
-                $googleAccount = $this->GoogleAccountUserBySubRepository->findBySub($info->getSub());
+                $googleAccount = $this->GoogleAccountUserBySubRepository->findByIdentifier($info->getIdentifier());
 
 
                 /** Если такого пользователя еще нет - нужно его создать и сохранить */
-                if(false === ($googleAccount instanceof GoogleAccountUserBySubResult))
+                if(false === ($googleAccount instanceof GoogleAccountUserByGoogleIdentifierResult))
                 {
                     $accountGoogleRegistrationDTO = new AccountGoogleRegistrationDTO()
                         ->setActive(true)
-                        ->setSub($info->getSub())
-                        ->setName($info->getName());
+                        ->setInvariable($info->getIdentifier());
 
                     $user = $this->AccountGoogleRegistrationHandler->handle($accountGoogleRegistrationDTO);
 

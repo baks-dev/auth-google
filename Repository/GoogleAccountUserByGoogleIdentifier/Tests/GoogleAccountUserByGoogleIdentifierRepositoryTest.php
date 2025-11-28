@@ -23,26 +23,26 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Google\UseCase\Google\Registration\Name;
+namespace BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier\Tests;
 
-use BaksDev\Auth\Google\Entity\Name\AccountGoogleNameInterface;
-use BaksDev\Auth\Google\Entity\Name\AccountGoogleName;
-use Symfony\Component\Validator\Constraints as Assert;
+use BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier\GoogleAccountUserByGoogleIdentifierInterface;
+use BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier\GoogleAccountUserByGoogleIdentifierRepository;
+use PHPUnit\Framework\Attributes\Group;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\Attribute\When;
 
-/** @see AccountGoogleName */
-final class AccountGoogleRegistrationNameDTO implements AccountGoogleNameInterface
+#[Group('auth-google')]
+#[Group('auth-google-repository')]
+#[When(env: 'test')]
+final class GoogleAccountUserByGoogleIdentifierRepositoryTest extends KernelTestCase
 {
-    #[Assert\NotBlank]
-    private string $name;
-
-    public function getName(): string
+    public function testFindAll(): void
     {
-        return $this->name;
-    }
+        $GoogleAccountUserByGoogleIdentifierRepository = self::getContainer()->get(GoogleAccountUserByGoogleIdentifierInterface::class);
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
+        /** @var GoogleAccountUserByGoogleIdentifierRepository $GoogleAccountUserByGoogleIdentifierRepository */
+        $result = $GoogleAccountUserByGoogleIdentifierRepository->findByIdentifier('');
+
+        self::assertTrue(true);
     }
 }

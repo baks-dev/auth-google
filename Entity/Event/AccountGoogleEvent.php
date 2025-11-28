@@ -28,8 +28,7 @@ namespace BaksDev\Auth\Google\Entity\Event;
 use BaksDev\Auth\Google\Entity\AccountGoogle;
 use BaksDev\Auth\Google\Entity\Active\AccountGoogleActive;
 use BaksDev\Auth\Google\Entity\Modify\AccountGoogleModify;
-use BaksDev\Auth\Google\Entity\Name\AccountGoogleName;
-use BaksDev\Auth\Google\Entity\Sub\AccountGoogleSub;
+use BaksDev\Auth\Google\Entity\Invariable\AccountGoogleInvariable;
 use BaksDev\Auth\Google\Type\Event\AccountGoogleEventUid;
 use BaksDev\Users\User\Type\Id\UserUid;
 use Doctrine\ORM\Mapping as ORM;
@@ -58,13 +57,9 @@ class AccountGoogleEvent extends EntityEvent
     #[ORM\Column(type: UserUid::TYPE, nullable: false)]
     private UserUid $account;
 
-    /** Уникальый google-идентификатор */
-    #[ORM\OneToOne(targetEntity: AccountGoogleSub::class, mappedBy: 'event', cascade: ['all'])]
-    private AccountGoogleSub $sub;
-
-    /** Имя пользователя в Google (пригодится при добавлении юзернейма в профиль) */
-    #[ORM\OneToOne(targetEntity: AccountGoogleName::class, mappedBy: 'event', cascade: ['all'])]
-    private AccountGoogleName $name;
+    /** Уникальный google-идентификатор */
+    #[ORM\OneToOne(targetEntity: AccountGoogleInvariable::class, mappedBy: 'event', cascade: ['all'])]
+    private AccountGoogleInvariable $invariable;
 
     /** Флаг - активен данный пользователь или нет */
     #[ORM\OneToOne(targetEntity: AccountGoogleActive::class, mappedBy: 'event', cascade: ['all'])]
@@ -105,11 +100,6 @@ class AccountGoogleEvent extends EntityEvent
         $this->account = $account instanceof AccountGoogle ? $account->getId() : $account;
     }
 
-    public function getName(): string
-    {
-        return $this->name->getName();
-    }
-
     public function getDto($dto): mixed
     {
         if($dto instanceof AccountGoogleEventInterface)
@@ -130,4 +120,8 @@ class AccountGoogleEvent extends EntityEvent
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
 
+    public function getAccount(): UserUid
+    {
+        return $this->account;
+    }
 }

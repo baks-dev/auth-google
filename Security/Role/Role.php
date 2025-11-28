@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Google\Security\Role;
 
+use BaksDev\Auth\Google\Controller\Admin\IndexController;
 use BaksDev\Menu\Admin\Command\Upgrade\MenuAdminInterface;
 use BaksDev\Menu\Admin\Type\SectionGroup\Group\Collection\MenuAdminSectionGroupCollectionInterface;
 use BaksDev\Menu\Admin\Type\SectionGroup\Group\MenuGroupUser;
@@ -52,7 +53,7 @@ final class Role implements RoleInterface, MenuAdminInterface
     /** Метод возвращает PATH раздела */
     public function getPath(): string
     {
-        return 'auth-google:admin.index';
+        return 'auth-google:'.IndexController::PATH;
     }
 
     /**

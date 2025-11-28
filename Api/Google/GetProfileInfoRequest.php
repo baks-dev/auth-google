@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Google\Api\Google;
 
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
@@ -58,6 +59,10 @@ final readonly class GetProfileInfoRequest
 
         $response = $response->toArray();
 
-        return new GetProfileInfoResult($response['sub'], $response['name'], $response['email']);
+        return new GetProfileInfoResult(
+            new AccountGoogleIdentifier($response['sub']),
+            $response['name'],
+            $response['email']
+        );
     }
 }

@@ -23,9 +23,42 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Google\Entity\Name;
+namespace BaksDev\Auth\Google\Type\Identifier;
 
-interface AccountGoogleNameInterface
+use BaksDev\Auth\Email\Type\Email\AccountEmail;
+use BaksDev\Core\Type\UidType\UidType;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
+
+final class AccountGoogleIdentifierType extends Type
 {
-    public function getName(): ?string;
+    public function getClassType(): string
+    {
+        return AccountGoogleIdentifier::class;
+    }
+
+    public function getName(): string
+    {
+        return AccountGoogleIdentifier::TYPE;
+    }
+
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
+    {
+        return (string) $value;
+    }
+
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?AccountGoogleIdentifier
+    {
+        return !empty($value) ? new AccountGoogleIdentifier($value) : null;
+    }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
+    {
+        return true;
+    }
+
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
+    {
+        return $platform->getStringTypeDeclarationSQL($column);
+    }
 }

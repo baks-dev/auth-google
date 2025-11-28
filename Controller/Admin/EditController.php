@@ -76,7 +76,7 @@ final class EditController extends AbstractController
                 $handle
             );
 
-            return $handle instanceof AccountGoogle ? $this->redirectToRoute('auth-google:admin.index') : $this->redirectToReferer();
+            return $handle instanceof AccountGoogle ? $this->redirectToRoute('auth-google:'.IndexController::PATH) : $this->redirectToReferer();
         }
 
         return $this->render(['form' => $form->createView()]);

@@ -39,7 +39,9 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 #[RoleSecurity('ROLE_ACCOUNT_GOOGLE_INDEX')]
 final class IndexController extends AbstractController
 {
-    #[Route('/admin/account/google/{page<\d+>}', name: 'admin.index', methods: ['GET', 'POST'])]
+    const string PATH = 'admin.index';
+
+    #[Route('/admin/account/google/{page<\d+>}', name: self::PATH, methods: ['GET', 'POST'])]
     public function index(
         Request $request,
         AllAccountGoogleInterface $allAccountGoogle,

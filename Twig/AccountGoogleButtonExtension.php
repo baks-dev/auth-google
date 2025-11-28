@@ -21,28 +21,32 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Auth\Google\Twig;
 
-namespace BaksDev\Auth\Google\UseCase\Google\Registration\Sub;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-use BaksDev\Auth\Google\Entity\Sub\AccountGoogleSubInterface;
-use BaksDev\Auth\Google\Entity\Sub\AccountGoogleSub;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/** @see AccountGoogleSub */
-final class AccountGoogleRegistrationSubDTO implements AccountGoogleSubInterface
+final class AccountGoogleButtonExtension extends AbstractExtension
 {
-    #[Assert\NotBlank]
-    private string $value;
+    public function __construct(#[Autowire(env: 'GOOGLE_CLIENT_ID')] private readonly string $clientId) {}
 
-    public function getValue(): string
+    public function getFunctions(): array
     {
-        return $this->value;
+        return [
+            new TwigFunction(
+                'account_google_button',
+                [$this, 'status'],
+                ['needs_environment' => true, 'is_safe' => ['html']]
+            ),
+        ];
     }
 
-    public function setValue(string $value): self
+    public function status(Environment $twig): string
     {
-        $this->value = $value;
-        return $this;
+        $url = 'https://accounts.google.com/o/oauth2/v2/auth?client_id='.$this->clientId.'&response_type=code&redirect_uri=https%3A//ann.baks.dev/google/auth&scope=openid+email+profile';
+
+        return $twig->render('@auth-google/twig/button.html.twig', ['url' => $url]);
     }
 }

@@ -23,9 +23,21 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Google\Entity\Sub;
+namespace BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier;
 
-interface AccountGoogleSubInterface
+use BaksDev\Users\User\Type\Id\UserUid;
+
+final readonly class GoogleAccountUserByGoogleIdentifierResult
 {
-    public function getValue(): ?string;
+    public function __construct(private string $id, private bool $active) {}
+
+    public function getId(): UserUid
+    {
+        return new UserUid($this->id);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active === true;
+    }
 }

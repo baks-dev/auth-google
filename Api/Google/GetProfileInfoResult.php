@@ -25,13 +25,19 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Google\Api\Google;
 
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
+
 final readonly class GetProfileInfoResult
 {
-    public function __construct(private string $sub, private string $name, private string $email) {}
+    public function __construct(
+        private AccountGoogleIdentifier $identifier,
+        private string $name,
+        private string $email
+    ) {}
 
-    public function getSub(): string
+    public function getIdentifier(): AccountGoogleIdentifier
     {
-        return $this->sub;
+        return $this->identifier;
     }
 
     public function getName(): string

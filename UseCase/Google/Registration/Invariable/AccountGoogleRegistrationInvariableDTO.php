@@ -23,12 +23,26 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Auth\Google\Repository\GoogleAccountUserBySub;
+namespace BaksDev\Auth\Google\UseCase\Google\Registration\Invariable;
 
-interface GoogleAccountUserBySubInterface
+use BaksDev\Auth\Google\Entity\Invariable\AccountGoogleInvariableInterface;
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/** @see AccountGoogleInvariable */
+final class AccountGoogleRegistrationInvariableDTO implements AccountGoogleInvariableInterface
 {
-    /**
-     * Метод возвращает идентификатор пользователя UserUid по идентификатору Google
-     */
-    public function findBySub(string $sub): GoogleAccountUserBySubResult|false;
+    #[Assert\NotBlank]
+    private AccountGoogleIdentifier $identifier;
+
+    public function getIdentifier(): ?AccountGoogleIdentifier
+    {
+        return $this->identifier;
+    }
+
+    public function setIdentifier(AccountGoogleIdentifier $identifier): self
+    {
+        $this->identifier = $identifier;
+        return $this;
+    }
 }
