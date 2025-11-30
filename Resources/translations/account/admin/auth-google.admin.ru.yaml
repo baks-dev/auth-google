@@ -1,0 +1,15 @@
+page:
+  index: 'Google аккаунты'
+  edit: 'Редактирование аккаунта Google'
+  delete: 'Удаление аккаунта Google'
+
+breadcrumb:
+  index: 'Аккаунты Google'
+
+success:
+  edit: 'Google-аккаунт успешно изменен'
+  delete: 'Google-аккаунт успешно удален'
+
+danger:
+  edit: 'Ошибка при изменении аккаунта Google'
+  delete: 'Ошибка при удалении аккаунта Google'

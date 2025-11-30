@@ -1,0 +1,25 @@
+{% block content %}
+    <div></div>
+{% endblock %}
+
+{% block javascript %}
+    <script nonce='{{ csp_nonce() }}' async data-src='/assets/homepage/script.min.js?v={{ version }}' class='lazy'></script>
+
+    <script nonce='{{ csp_nonce() }}' type="text/javascript">
+        // Проверяем, открыто ли это окно как всплывающее (а не в обычной вкладке)
+        if(window.opener && window.opener !== window)
+        {
+            // отправляем сигнал родительскому окну чтобы обновить UI
+            window.opener.postMessage({type: 'GOOGLE_AUTH_SUCCESS'}, '*');
+
+            // Закрываем текущее окно
+            window.close();
+        }
+        else
+        {
+            // Если окно не было открыто через window.open — просто показываем сообщение
+            document.body.innerHTML = '<p>Авторизация завершена. Окно закроется автоматически</p>';
+            window.location.replace("{{ path('core:public.homepage') }}");
+        }
+    </script>
+{% endblock %}

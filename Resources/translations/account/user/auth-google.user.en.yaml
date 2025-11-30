@@ -1,0 +1,11 @@
+page:
+  index: 'Google authorization'
+
+breadcrumb:
+  index: 'Google authorization'
+
+success:
+  code: 'Authorization was successful'
+
+danger:
+  code: 'Error on Google authorization'

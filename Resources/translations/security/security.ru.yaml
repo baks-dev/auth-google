@@ -1,0 +1,15 @@
+ROLE_ACCOUNT_GOOGLE:
+  name: 'Google аккаунты'
+  desc: 'Список зрегистрированных пользователей Google'
+
+ROLE_ACCOUNT_GOOGLE_INDEX:
+  name: 'Просмотр'
+  desc: ''
+
+ROLE_ACCOUNT_GOOGLE_EDIT:
+  name: 'Редактировать'
+  desc: ''
+
+ROLE_ACCOUNT_GOOGLE_DELETE:
+  name: 'Удалить'
+  desc: ''

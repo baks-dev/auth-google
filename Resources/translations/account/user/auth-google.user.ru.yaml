@@ -1,0 +1,11 @@
+page:
+  index: 'Авторизация Google'
+
+breadcrumb:
+  index: 'Авторизация пользователя Google'
+
+success:
+  code: 'Авторизация успешно выполнена'
+
+danger:
+  code: 'Ошибка при авторизации пользователя Google'

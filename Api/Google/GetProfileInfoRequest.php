@@ -1,0 +1,68 @@
+<?php
+/*
+ * Copyright 2025.  Baks.dev <admin@baks.dev>
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+declare(strict_types=1);
+
+namespace BaksDev\Auth\Google\Api\Google;
+
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpClient\RetryableHttpClient;
+
+#[Autoconfigure(public: true)]
+final readonly class GetProfileInfoRequest
+{
+    /**
+     * Получаем Id и имя профиля в Google по access-токену, выданному данному пользователю
+     */
+    public function getInfo(string $token): GetProfileInfoResult|false
+    {
+        $request = new RetryableHttpClient(
+            HttpClient::create()
+                ->withOptions([
+                    'base_uri' => 'https://www.googleapis.com',
+                    'verify_host' => true,
+                ])
+        );
+
+        $response = $request->request(
+            'GET',
+            '/oauth2/v3/userinfo',
+            ['query' => ['access_token' => $token]]
+        );
+
+        if($response->getStatusCode() !== 200)
+        {
+            return false;
+        }
+
+        $response = $response->toArray();
+
+        return new GetProfileInfoResult(
+            new AccountGoogleIdentifier($response['sub']),
+            $response['name'],
+            $response['email']
+        );
+    }
+}
