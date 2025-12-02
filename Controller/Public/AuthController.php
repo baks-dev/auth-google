@@ -25,16 +25,18 @@ declare(strict_types=1);
 
 namespace BaksDev\Auth\Google\Controller\Public;
 
+use BaksDev\Core\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use BaksDev\Core\Controller\AbstractController;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
 final class AuthController extends AbstractController
 {
-    #[Route('/google/auth', name: 'public.auth', methods: ['GET', 'POST'])]
+    public const string NAME = 'public.auth';
+
+    #[Route('/google/auth', name: self::NAME, methods: ['GET', 'POST'])]
     public function auth(Request $request): Response
     {
         /** Рендерим страницу с редиректом на главную */

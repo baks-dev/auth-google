@@ -99,10 +99,12 @@ final class GoogleAuthenticator extends AbstractAuthenticator
         /** Получаем паспорт */
         return new SelfValidatingPassport(
             new UserBadge($request->get('code'), function() use ($info) {
+
                 $googleAccount = $this->GoogleAccountUserBySubRepository->findByIdentifier($info->getIdentifier());
 
-
-                /** Если такого пользователя еще нет - нужно его создать и сохранить */
+                /**
+                 * Если такого пользователя еще нет - нужно его создать и сохранить
+                 */
                 if(false === ($googleAccount instanceof GoogleAccountUserByGoogleIdentifierResult))
                 {
                     $accountGoogleRegistrationDTO = new AccountGoogleRegistrationDTO()
@@ -113,19 +115,22 @@ final class GoogleAuthenticator extends AbstractAuthenticator
 
                     if(false === ($user instanceof User))
                     {
-                        return null;
+                        return false;
                     }
 
-                    $this->MessageDispatch->dispatch(new NewProfileOnGoogleRegistrationMessage(
-                        $user->getId(),
-                        $info->getName()
-                    ));
+                    $this->MessageDispatch->dispatch(
+                        message: new NewProfileOnGoogleRegistrationMessage(
+                            $user->getId(),
+                            $info->getName(),
+                        ),
+                    );
 
                     /** Отправляем сообщение на создание нового email-аккаунта */
                     $this->MessageDispatch->dispatch(
-                        new CreateAccountMessage(
+                        message: new CreateAccountMessage(
                             $user->getId(),
-                            new AccountEmail($info->getEmail()))
+                            new AccountEmail($info->getEmail())),
+                        transport: 'auth-email',
                     );
 
                     return $user;
@@ -135,12 +140,11 @@ final class GoogleAuthenticator extends AbstractAuthenticator
                 /** Если пользователь найден, но не активен - значит он забанен, и мы его не авторизуем */
                 if(false === $googleAccount->isActive())
                 {
-                    return null;
+                    return false;
                 }
 
                 return $this->userById->get($googleAccount->getId());
             }),
-            []
         );
     }
 
