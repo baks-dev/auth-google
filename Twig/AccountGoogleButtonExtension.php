@@ -25,12 +25,18 @@ namespace BaksDev\Auth\Google\Twig;
 
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 final class AccountGoogleButtonExtension extends AbstractExtension
 {
-    public function __construct(#[Autowire(env: 'GOOGLE_CLIENT_ID')] private readonly string $clientId) {}
+    public function __construct(
+        #[Autowire(env: 'GOOGLE_CLIENT_ID')] private readonly string $clientId,
+        #[Autowire(env: 'APP_VERSION')] private readonly string $version,
+        #[Autowire(env: 'HOST')] private readonly string $host,
+
+    ) {}
 
     public function getFunctions(): array
     {
@@ -45,8 +51,23 @@ final class AccountGoogleButtonExtension extends AbstractExtension
 
     public function status(Environment $twig): string
     {
-        $url = 'https://accounts.google.com/o/oauth2/v2/auth?client_id='.$this->clientId.'&response_type=code&redirect_uri=https%3A//ann.baks.dev/google/auth&scope=openid+email+profile';
+        $data = [
+            'client_id' => $this->clientId,
+            'response_type' => 'code',
+            'redirect_uri' => sprintf('https://%s/google/auth', $this->host),
+            'scope' => 'openid+email+profile',
+        ];
 
-        return $twig->render('@auth-google/twig/button.html.twig', ['url' => $url]);
+        $url = sprintf('https://accounts.google.com/o/oauth2/v2/auth?%s', http_build_query($data));
+
+        try
+        {
+            return $twig->render('@Template/auth-google/twig/button.html.twig', ['url' => $url, 'version' => $this->version]);
+        }
+        catch(LoaderError)
+        {
+            return $twig->render('@auth-google/twig/button.html.twig', ['url' => $url, 'version' => $this->version]);
+        }
+
     }
 }
