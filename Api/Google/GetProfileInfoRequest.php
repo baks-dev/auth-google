@@ -30,7 +30,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 
-#[Autoconfigure(public: true)]
 final readonly class GetProfileInfoRequest
 {
     /**

@@ -31,7 +31,6 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\RetryableHttpClient;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-#[Autoconfigure(public: true)]
 final readonly class GetAccessTokenRequest
 {
     const string REDIRECT = 'auth-google:public.auth';

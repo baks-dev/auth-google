@@ -33,7 +33,6 @@ use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
-#[Autoconfigure(public: true)]
 final readonly class GoogleAccountUserByGoogleIdentifierRepository implements GoogleAccountUserByGoogleIdentifierInterface
 {
     public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
