@@ -31,11 +31,12 @@ use BaksDev\Auth\Google\Entity\Event\AccountGoogleEvent;
 use BaksDev\Auth\Google\Entity\Invariable\AccountGoogleInvariable;
 use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
+#[Autoconfigure(public: true)]
 final readonly class GoogleAccountUserByGoogleIdentifierRepository implements GoogleAccountUserByGoogleIdentifierInterface
 {
     public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
-
 
     /**
      * Метод возвращает идентификатор пользователя UserUid по идентификатору Google
@@ -45,7 +46,6 @@ final readonly class GoogleAccountUserByGoogleIdentifierRepository implements Go
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
         $dbal
-
             ->from(AccountGoogleInvariable::class, 'invariable')
             ->where('invariable.identifier = :identifier')
             ->setParameter('identifier', $identifier, AccountGoogleIdentifier::TYPE);

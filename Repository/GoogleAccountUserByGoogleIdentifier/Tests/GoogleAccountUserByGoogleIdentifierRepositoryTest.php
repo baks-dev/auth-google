@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier\Tests;
 
 use BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier\GoogleAccountUserByGoogleIdentifierInterface;
-use BaksDev\Auth\Google\Repository\GoogleAccountUserByGoogleIdentifier\GoogleAccountUserByGoogleIdentifierRepository;
+use BaksDev\Auth\Google\Type\Identifier\AccountGoogleIdentifier;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -38,10 +38,12 @@ final class GoogleAccountUserByGoogleIdentifierRepositoryTest extends KernelTest
 {
     public function testFindAll(): void
     {
-        $GoogleAccountUserByGoogleIdentifierRepository = self::getContainer()->get(GoogleAccountUserByGoogleIdentifierInterface::class);
+        /** @var GoogleAccountUserByGoogleIdentifierInterface $GoogleAccountUserByGoogleIdentifierRepository */
+        $GoogleAccountUserByGoogleIdentifierRepository = self::getContainer()
+            ->get(GoogleAccountUserByGoogleIdentifierInterface::class);
 
-        /** @var GoogleAccountUserByGoogleIdentifierRepository $GoogleAccountUserByGoogleIdentifierRepository */
-        $result = $GoogleAccountUserByGoogleIdentifierRepository->findByIdentifier('');
+        $result = $GoogleAccountUserByGoogleIdentifierRepository
+            ->findByIdentifier(new AccountGoogleIdentifier('test'));
 
         self::assertTrue(true);
     }

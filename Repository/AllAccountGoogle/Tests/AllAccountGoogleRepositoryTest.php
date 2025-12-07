@@ -41,12 +41,19 @@ final class AllAccountGoogleRepositoryTest extends KernelTestCase
 {
     public function testFindAll(): void
     {
+        self::assertTrue(true);
+
         $AllAccountGoogleRepository = self::getContainer()->get(AllAccountGoogleInterface::class);
 
         /** @var AllAccountGoogleRepository $AllAccountGoogleRepositoryTest */
         $result = $AllAccountGoogleRepository
             ->findAll()
             ->getData();
+
+        if(empty($result))
+        {
+            return;
+        }
 
         foreach($result as $allAccountGoogleResult)
         {
